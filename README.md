@@ -1,7 +1,13 @@
 ## WAT
 
-Boilerplate to setup a DNS server for your home usage, to resolve your own domains at home.
+Boilerplate to setup a DNS server for your home usage, to resolve your own services at home.
+What you want is:
 
+ - not remembering your IPs all the time, but use `nas.myself.com`
+ - have **valid SSL** certificates to access you **home** services using the browser `https://nas.myself.com`
+ - No longer remember all the different web-server ports of your services, but just use `443` - so `https://nas.myself.com`
+ 
+## Tell me more
 Let's assume you have the official domain `myself.com`.
  
 Now you have your own services at home and want you do want to run them using official SSL certificates.
