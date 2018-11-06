@@ -6,8 +6,8 @@ services:
     volumes:
     - ./unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
     ports:
-    - 55:53
-    - 55:53/udp
+    - 53:53
+    - 53:53/udp
   traefik:
     image: eugenmayer/traefik
     environment:
