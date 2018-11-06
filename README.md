@@ -36,8 +36,9 @@ And those can be resolved at home too, so it's like a `partial` overlay.
 ```bash
 docker-compose up
 # assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
-dig @127.0.0.1 nas.myself.com
-dig @127.0.0.1 www.nas.myself.com
+# our DNS server runs on Port 55 (for testing purposes)
+dig -p55 @127.0.0.1 nas.myself.com
+dig -55 @127.0.0.1 www.nas.myself.com
 ```
 
 You cannot really test the SSL-Offloading here easily without adjusting the configuration of your services, so just go on below. 
@@ -94,6 +95,8 @@ Wasn't that easy?
 3. Replace `TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER` in `./.env` with the [DNS cloud provider](https://docs.traefik.io/configuration/acme/#provider) you use. I like cloudflare because its free and is supported by the Let's Encrypt clients ( its API ) - thus it offers us the ability to use [DNS-01 callenge](https://www.eff.org/de/deeplinks/2018/02/technical-deep-dive-securing-automation-acme-dns-challenge-validation) for free. Have your choice :)
 4. Replace `TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS` in `./.env` with credentials for your cloud provider with the key/values you find in the [Treafik ACME documentation](https://docs.traefik.io/configuration/acme/#provider) and put them there like it is [defined here](https://github.com/EugenMayer/docker-image-traefik#acme) (concat with `;` basically)
 5. Remove `TRAEFIK_ACME_CASERVER` from the `docker-compose.yml` to disable the Let's Encrypt staging mode and you are set to go
+6. Replace `DNS_PORT` in `./.env`port from `55` to `53` for the default dns port
+7. Tell your gateway/router to use the ip of your docker-engine, here `192.168.0.2` as the first DNS server
  
 ## Credits
 
