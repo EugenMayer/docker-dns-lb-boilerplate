@@ -1,0 +1,13 @@
+[backends] 
+  [backends.gateway] 
+    [backends.gateway.servers.server1] 
+      url = "https://gateway.myself.com:80"
+[frontends] 
+  [frontends.gateway] 
+    entrypoints = ["https", "http"] 
+    backend = "nas" 
+    passHostHeader=true 
+    [frontends.gateway.headers] 
+      SSLRedirect = true 
+    [frontends.gateway.routes.test_1] 
+      rule = "Host:www.gateway.myself.com"

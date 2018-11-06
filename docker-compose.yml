@@ -1,0 +1,34 @@
+version: "2"
+
+services:
+  unbound:
+    image: mvance/unbound:1.8.1
+    volumes:
+    - ./unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
+    ports:
+    - 55:53
+    - 55:53/udp
+  traefik:
+    image: eugenmayer/traefik
+    environment:
+      # enable file based rules for our home services
+      TRAEFIK_FILE_ENABLE: 'true'
+      # enable Lets-Encrypt
+      TRAEFIK_ACME_ENABLE: 'true'
+      TRAEFIK_ACME_CHALLENGE: 'dns'
+      # see .env and https://github.com/EugenMayer/docker-image-traefik#acme
+      TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: "${TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER}"
+      TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS: "${TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS}"
+      ###  below are test server adjustments
+      # use the ACME staging server
+      TRAEFIK_ACME_CASERVER: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      # enable https only mode for auto-redirects
+      TRAEFIK_HTTPS_ENABLE: 'only'
+      TRAEFIK_ADMIN_ENABLE: 'true'
+      # if you want to also expose other docker containers in the docker-engine
+      # TRAEFIK_DOCKER_ENABLE: 'true'
+    volumes:
+    - ./traefik:/mnt/filestorage
+    ports:
+    - 80:80
+    - 443:443
