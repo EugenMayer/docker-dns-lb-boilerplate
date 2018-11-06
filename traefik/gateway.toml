@@ -10,4 +10,4 @@
     [frontends.gateway.headers] 
       SSLRedirect = true 
     [frontends.gateway.routes.test_1] 
-      rule = "Host:www.gateway.myself.com"
+      rule = "Host: www.gateway.myself.com"

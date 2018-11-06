@@ -10,4 +10,4 @@
     [frontends.nas.headers] 
       SSLRedirect = true 
     [frontends.nas.routes.test_1] 
-      rule = "Host:www.nas.myself.com"
+      rule = "Host: www.nas.myself.com"
