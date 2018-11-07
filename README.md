@@ -60,8 +60,13 @@ Not test your setups
 ```console
 # assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
 # our DNS server runs on Port 55 (for testing purposes)
+
+# our private domains
 dig -p55 @127.0.0.1 nas.myself.com
 dig -p55 @127.0.0.1 www.nas.myself.com
+
+# and now a recursion
+dig -p55 @127.0.0.1 google.com
 ```
 You cannot really test the SSL-Offloading here easily without adjusting the configuration of your services, so just go on below. 
 
