@@ -33,8 +33,31 @@ And those can be resolved at home too, so it's like a `partial` overlay.
 
 ## Quick start
 
+amd64
 ```bash
 docker-compose up
+# assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
+# our DNS server runs on Port 55 (for testing purposes)
+dig -p55 @127.0.0.1 nas.myself.com
+dig -p55 @127.0.0.1 www.nas.myself.com
+```
+
+For a RaspberryPi 1 or 2 
+
+amd64
+```bash
+docker-compose -f docker-compose.yml -f docker-compose-arm32.yml up
+# assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
+# our DNS server runs on Port 55 (for testing purposes)
+dig -p55 @127.0.0.1 nas.myself.com
+dig -p55 @127.0.0.1 www.nas.myself.com
+```
+
+For a RaspberryPi 3 / Bananapi
+
+amd64
+```bash
+docker-compose -f docker-compose.yml -f docker-compose-arm64.yml up
 # assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
 # our DNS server runs on Port 55 (for testing purposes)
 dig -p55 @127.0.0.1 nas.myself.com

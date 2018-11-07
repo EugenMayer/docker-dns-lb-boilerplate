@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+  unbound:
+    image: eugenmayer/unbound:1.7-arm64v8
+  traefik:
+    image: eugenmayer/traefik:arm64v8-1.7.4
