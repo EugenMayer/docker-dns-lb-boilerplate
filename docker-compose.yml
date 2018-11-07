@@ -31,7 +31,6 @@ services:
     volumes:
     - ./traefik:/mnt/filestorage
     - certs:/mnt/certs
-    - filestorage:/mnt/filestorage
     - acme:/mnt/acme
     # mount our docker socket so our docker container can be discovered
     #- /var/run/docker.sock:/var/run/docker.sock
