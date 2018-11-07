@@ -2,9 +2,10 @@ version: "2"
 
 services:
   unbound:
-    image: mvance/unbound:1.8.1
+    image: eugenmayer/unbound:1.8${ARCH}
     volumes:
-    - ./unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
+    - ./unbound/01_records.conf:/etc/unbound/conf.d/01_records.conf
+    - ./unbound/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
     ports:
     - ${DNS_PORT}:53
     - ${DNS_PORT}:53/udp
@@ -29,6 +30,15 @@ services:
       # TRAEFIK_DOCKER_ENABLE: 'true'
     volumes:
     - ./traefik:/mnt/filestorage
+    - certs:/mnt/certs
+    - filestorage:/mnt/filestorage
+    - acme:/mnt/acme
+    # mount our docker socket so our docker container can be discovered
+    #- /var/run/docker.sock:/var/run/docker.sock
     ports:
     - 80:80
     - 443:443
+
+volumes:
+  acme:
+  certs:
