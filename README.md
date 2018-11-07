@@ -81,7 +81,7 @@ We assume the e.g. raspberry-pi you run this stack on is on the ip `192.168.0.2`
 - `192.168.0.2` on port 80:443 also locates our central load-balancer for SSL offloading
  
 #### Unbound configuration
-`unbound/a-records.conf` defines the entries you want to have as private domains.
+`unbound/01_records.conf` defines the entries you want to have as private domains.
 Change it to your likings, adjust the domains and IPs.
 
 You might wonder why `www.nas.myself.com` and `nas.myself.com` is included, lets drill that down:
@@ -100,22 +100,22 @@ Let's pick the nas example at `traefik/nas.toml`
 
 It tells Traefik to forward every request with the host-header `www.nas.mysql.com` to the backend `https://nas.myself.com:8080` which is our NAS Server-Web-Browser interface.
 
-Same is done for our `gateway`, your router and your `homeautomation`, assuming they have other backend ports just as an example
+Same is done for our `gateway` and your `homeautomation`, assuming they have other backend ports just as an example
 
-More to how define rule can be found in the [Traefik documentation](https://docs.traefik.io/configuration/backends/file/) at  
+See the [Traefik documentation](https://docs.traefik.io/configuration/backends/file/) for more about those rules if you like  
 **and that's it** 
 
 
 ## What you have now?
 
-1. Your Traefik ssl-offloader will get proper SSL certificates for every `rule = "Host:www.nas.myself.com"` you define and install it.
-1. When you type `https://www.nas.myself.com` in your browser, you will have a valid SSL certificate while accessing your NAS
-1. You can connect to your nas ssh using `ssh root@nas.myself.com`
+1. Your Traefik ssl-offloader will get a **valid/official SSL certificates** for every `rule = "Host:www.nas.myself.com"` you define and install it.
+1. When you type `https://www.nas.myself.com` into your browser, you will connect to your web-service - without any warnings
+1. E.g. You can connect to your nas ssh shell using the DNS record and not remembering the ip .. `ssh root@nas.myself.com`
 
-Never have to accept self signed certificates again, define exceptions in mobile apps to accept those at home and so on.
+You never have to accept self signed certificates again, define exceptions in mobile apps to accept those at home and so on.
 Wasn't that easy?
 
-## What do you need to ajust for your setup
+## What do you need to adjust for your setup
 1. Copy this repo to your docker-engine location.
 1. change `unbound/a-records.conf` to your likings and your actual `domain`, add services, fix the IP's and so on
 2. adjust the rules in `traefik` to match your domain and backend ports and add as many as you like
