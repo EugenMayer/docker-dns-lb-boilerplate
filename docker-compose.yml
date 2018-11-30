@@ -2,7 +2,7 @@ version: "2"
 
 services:
   unbound:
-    image: eugenmayer/unbound:1.8$
+    image: eugenmayer/unbound:1.8
     volumes:
     - ./unbound/01_records.conf:/etc/unbound/conf.d/01_records.conf
     - ./unbound/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
