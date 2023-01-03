@@ -15,13 +15,13 @@ To accomplish that, you want to utilize a "private section" of your domain for y
 set those settings in your primary DNS server for that domain (where ever you bught it), e.g. to not expose your network structure
 or break the RFC :)
 
-So you want to build a down DNS server for your home which does resolve
+So you want to build a down DNS server for your home which does resolves
 
- - `gateway.myself.com` `to 192.168.0.1`
- - `nas.myself.com` to `192.168.0.10`
- - `homeautomation.myself.com` to `192.168.0.6`
- - `fullcustom.myself.com` to your docker service `fullcustom`
- - `custom1.myself.com` to your docker service `web1`
+ - `gateway.myself.com` to `to 192.168.0.1` on port `443` via `https`
+ - `nas.myself.com`  to `192.168.0.10` on port `5001` via `https`
+ - `www.homeautomation.myself.com` to `192.168.0.6` on port `80` via `http`
+ - `www.fullcustom.myself.com` to your docker service `fullcustom`
+ - `www.custom1.myself.com` to your docker service `web1`
 
  
 And if you query anything else, it recurses online to e.g. googles public DNS `8.8.8.8`. 
@@ -46,10 +46,15 @@ cp .env.example .env
 You can now start the example-based project
 
 ```console
-docker-compose up
+docker-compose up -d
 ```
 
+Be sure that the DNS name `www.traefik.$BASEDOMAIN` points to your machine, so it should be 127.0.0.1 in test setups.
+
+You can now connect to your traefik admin dashboard via `http://www.traefik.$BASEDOMAIN/dashboard/` with the user `admin/admin`
+
 Now test your setups 
+
 ```console
 # assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
 # our DNS server runs on Port 55 (for testing purposes)
@@ -77,6 +82,13 @@ To make this production ready,
  2. Also adjust `BASEODOMAIN`, `TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS`, `TRAEFIK_ACME_EMAIL` to your liking. For help for the value forTRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS see https://github.com/EugenMayer/docker-image-traefik#acme
  3. You now should put your `file` based rules to `data/filestorage` so `data/filestorage/nas.toml` and so on
  4. ensure `COMPOSE_FILE` is set to `docker-compose.yml`
+ 5. Adjust `TRAEFIK_ADMIN_AUTH_USERS` to either blank or generate a password via `docker run -it httpd htpasswd -sbn admin yourpw`
+
+
+Be sure that the DNS name `www.traefik.$BASEDOMAIN` points to docker-engine machine ip.
+You can now connect to your traefik admin dashboard via `http://www.traefik.$BASEDOMAIN/dashboard/` with the user `admin/admin`
+
+See the examples in `docker-compose-test-service.yml`.
 
 ## Hands on
  
