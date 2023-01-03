@@ -2,7 +2,7 @@ version: "3"
 
 services:
   unbound:
-    image: eugenmayer/unbound:1.17
+    image: ghcr.io/eugenmayer/unbound:1.17-1
     volumes:
     - ./unbound/01_records.conf:/etc/unbound/conf.d/01_records.conf
     - ./unbound/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
@@ -10,7 +10,7 @@ services:
     - ${DNS_PORT}:53
     - ${DNS_PORT}:53/udp
   traefik:
-    image: eugenmayer/traefik:1.7
+    image: ghcr.io/eugenmayer/traefik:1.7
     environment:
       # enable file based rules for our home services
       TRAEFIK_FILE_ENABLE: 'true'
