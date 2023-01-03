@@ -10,33 +10,57 @@ services:
     - ${DNS_PORT}:53
     - ${DNS_PORT}:53/udp
   traefik:
-    image: eugenmayer/traefik:1.7
+    restart: always
+    image: ghcr.io/eugenmayer/traefik:2.x
     environment:
-      # enable file based rules for our home services
-      TRAEFIK_FILE_ENABLE: 'true'
-      # enable Lets-Encrypt
-      TRAEFIK_ACME_ENABLE: 'true'
-      TRAEFIK_ACME_CHALLENGE: 'dns'
-      # see .env and https://github.com/EugenMayer/docker-image-traefik#acme
-      TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: "${TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER}"
-      TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS: "${TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS}"
-      ###  below are test server adjustments
-      # use the ACME staging server
-      TRAEFIK_ACME_CASERVER: "https://acme-staging-v02.api.letsencrypt.org/directory"
-      # enable https only mode for auto-redirects
       TRAEFIK_HTTPS_ENABLE: 'only'
+
+      # ACME
+      TRAEFIK_ACME_ENABLE: 'true'
       TRAEFIK_ADMIN_ENABLE: 'true'
-      # if you want to also expose other docker containers in the docker-engine
-      # TRAEFIK_DOCKER_ENABLE: 'true'
+
+      TRAEFIK_ACME_CHALLENGE: 'dns'
+      TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: 'cloudflare'
+      TRAEFIK_ACME_CHALLENGE_DNS_DELAY: 0
+      TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS: ${TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS}
+      TRAEFIK_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
+
+      # TRAEFIK_ACME_CASERVER: 'https://acme-v02.api.letsencrypt.org/directory'
+      TRAEFIK_ACME_CASERVER: "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+      TRAEFIK_ACME_LOGGING: 'false'
+
+      # enable admin dashboard under /dashboard/
+      TRAEFIK_ADMIN_ENABLE: 'true'
+      TRAEFIK_ADMIN_SSL: 'false'
+
+      # docker
+      TRAEFIK_DOCKER_ENABLE: 'true'
+      TRAEFIK_DOCKER_DEFAULT_RULE: 'Host(`{{ normalize .Name }}.${BASEDOMAIN}`)'
+      TRAEFIK_DOCKER_EXPOSEDBYDEFAULT: 'true'
+
+      # misc
+      TRAEFIK_FILE_ENABLE: 'true'
+      TRAEFIK_INSECURE_SKIP: 'true'
+      TRAEFIK_DEBUG: 'false'
+      TRAEFIK_LOG_LEVEL: 'ERROR'
     volumes:
-    - ./traefik:/mnt/filestorage
-    - certs:/mnt/certs
-    - acme:/mnt/acme
-    # mount our docker socket so our docker container can be discovered
-    #- /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik:/mnt/filestorage
+      - certs:/mnt/certs
+      - acme:/mnt/acme
+      # mount our docker socket so our docker container can be discovered
+      #- /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-    - 80:80
-    - 443:443
+      - 80:8080
+      - 443:8443
+      - 8000:8000
+    labels:
+      traefik.http.services.traefik.loadbalancer.server.port: 8443
+      traefik.http.routers.traefik.tls: 'true'
+      traefik.http.routers.traefik.tls.certresolver: 'default'
+      traefik.http.routers.traefik.rule: 'Host(`www.traefik.${BASEDOMAIN}`)'
+      traefik.docker.network: 'traefik'
 
 volumes:
   acme:

@@ -1,13 +1,11 @@
-[backends] 
-  [backends.gateway] 
-    [backends.gateway.servers.server1] 
+[http.services]  
+  [http.services.gateway.loadBalancer]  
+    [[http.services.gateway.loadBalancer.servers]]  
       url = "https://gateway.myself.com:80"
-[frontends] 
-  [frontends.gateway] 
-    entrypoints = ["https", "http"] 
-    backend = "nas" 
-    passHostHeader=true 
-    [frontends.gateway.headers] 
-      SSLRedirect = true 
-    [frontends.gateway.routes.test_1] 
-      rule = "Host: www.gateway.myself.com"
+
+[http.routers]  
+  [http.routers.gateway]  
+    service = "gateway" 
+    rule = "Host(`www.gateway.myself.com`)"  
+  [http.routers.gateway.tls] 
+    certResolver = "default"      

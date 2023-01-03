@@ -1,13 +1,11 @@
-[backends]
-  [backends.homeautomation]
-    [backends.homeautomation.servers.server1]
+[http.services]  
+  [http.services.homeautomation.loadBalancer]  
+    [[http.services.homeautomation.loadBalancer.servers]]  
       url = "https://homeautomation.myself.com:80"
-[frontends]
-  [frontends.homeautomation]
-    entrypoints = ["https", "http"]
-    backend = "nas"
-    passHostHeader=true
-    [frontends.homeautomation.headers]
-      SSLRedirect = true
-    [frontends.homeautomation.routes.test_1]
-      rule = "Host: www.homeautomation.myself.com"
+
+[http.routers]  
+  [http.routers.homeautomation]  
+    service = "homeautomation" 
+    rule = "Host(`www.homeautomation.myself.com`)"  
+  [http.routers.homeautomation.tls] 
+    certResolver = "default"

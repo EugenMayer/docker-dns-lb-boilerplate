@@ -1,13 +1,11 @@
-[backends] 
-  [backends.nas] 
-    [backends.nas.servers.server1] 
-      url = "https://nas.myself.com:8080"
-[frontends]
-  [frontends.nas] 
-    entrypoints = ["https", "http"] 
-    backend = "nas" 
-    passHostHeader=true 
-    [frontends.nas.headers] 
-      SSLRedirect = true 
-    [frontends.nas.routes.test_1] 
-      rule = "Host: www.nas.myself.com"
+[http.services]  
+  [http.services.nas.loadBalancer]  
+    [[http.services.nas.loadBalancer.servers]]  
+      url = "https://nas.myself.com:5001"
+
+[http.routers]  
+  [http.routers.nas]  
+    service = "nas" 
+    rule = "Host(`www.nas.myself.com`)"  
+  [http.routers.nas.tls] 
+    certResolver = "default"      
