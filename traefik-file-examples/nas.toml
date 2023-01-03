@@ -1,0 +1,11 @@
+[http.services]  
+  [http.services.nas.loadBalancer]  
+    [[http.services.nas.loadBalancer.servers]]  
+      url = "https://nas.myself.com:5001"
+
+[http.routers]  
+  [http.routers.nas]  
+    service = "nas" 
+    rule = "Host(`www.nas.myself.com`)"  
+  [http.routers.nas.tls] 
+    certResolver = "default"      
