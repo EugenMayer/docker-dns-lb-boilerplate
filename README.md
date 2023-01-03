@@ -20,6 +20,9 @@ So you want to build a down DNS server for your home which does resolve
  - `gateway.myself.com` `to 192.168.0.1`
  - `nas.myself.com` to `192.168.0.10`
  - `homeautomation.myself.com` to `192.168.0.6`
+ - `fullcustom.myself.com` to your docker service `fullcustom`
+ - `custom1.myself.com` to your docker service `web1`
+
  
 And if you query anything else, it recurses online to e.g. googles public DNS `8.8.8.8`. 
 In addition, this will also be a DNS cache to improve your general DNS resolution at home.
