@@ -37,26 +37,16 @@ Prepare repo
 ```console
 git clone https://github.com/EugenMayer/docker-dns-lb-boilerplate`
 cd docker-dns-lb-boilerplate
+cp .env.example .env
 ```
 
-The depending on your arch
+You can now start the example-based project
 
-amd64
 ```console
 docker-compose up
 ```
 
-For a RaspberryPi 1 or 2 
-```console
-docker-compose -f docker-compose.yml -f docker-compose-arm32.yml up
-```
-
-For a RaspberryPi 3 / Bananapi
-```console
-docker-compose -f docker-compose.yml -f docker-compose-arm64.yml up
-```
-
-Not test your setups 
+Now test your setups 
 ```console
 # assuming you have dig and you use docker-for-mac. Replace 127.0.0.1 with your docker-machine ip
 # our DNS server runs on Port 55 (for testing purposes)
@@ -70,6 +60,20 @@ dig -p55 @127.0.0.1 google.com
 ```
 You cannot really test the SSL-Offloading here easily without adjusting the configuration of your services, so just go on below. 
 
+## Production start
+
+```console
+git clone https://github.com/EugenMayer/docker-dns-lb-boilerplate`
+cd docker-dns-lb-boilerplate
+cp .env.example .env
+mkdir ../data
+```
+
+To make this production ready,
+ 1. edit `.env` and uncomment`FILESTORAGE`, `TRAEFIK_ACME_CASERVER`, `DNS_PORT`.
+ 2. Also adjust `BASEODOMAIN`, `TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS`, `TRAEFIK_ACME_EMAIL` to your liking. For help for the value forTRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS see https://github.com/EugenMayer/docker-image-traefik#acme
+ 3. You now should put your `file` based rules to `data/filestorage` so `data/filestorage/nas.toml` and so on
+ 4. ensure `COMPOSE_FILE` is set to `docker-compose.yml`
 
 ## Hands on
  
@@ -95,12 +99,19 @@ But for ssh you will be using `ssh root@nas.myself.com`
    
 
 #### Load balancer / SSL offload ( Traefik )
-`traefik` are your frontend/backend rules for your load-balancer. It defines for which domain you want to loadbalance to which backend.
-Let's pick the nas example at `traefik/nas.toml`
 
-It tells Traefik to forward every request with the host-header `www.nas.mysql.com` to the backend `https://nas.myself.com:8080` which is our NAS Server-Web-Browser interface.
+##### Label based
 
-Same is done for our `gateway` and your `homeautomation`, assuming they have other backend ports just as an example
+For this see `docker-compose-test-service.yml`. Several examples are given.
+Also see all the available labels at https://doc.traefik.io/traefik/v2.0/routing/providers/docker/
+
+##### File based
+For all your home services which do not run on your docker engine, but rather as external services, you use the file based configuration.
+
+Let's pick the nas example at `traefik-file-examples/nas.toml`
+
+It tells Traefik to forward every request with the host-header `www.nas.myself.com` to the backend `https://nas.myself.com:5001` which is our NAS Server-Web-Browser interface. Ensure you understart that
+- `https://` means that the port 5001 needs to talk ssl/tls - if that is not the case, use `http://` - this is how to define if upstream should be ssl or not
 
 See the [Traefik documentation](https://docs.traefik.io/configuration/backends/file/) for more about those rules if you like  
 **and that's it** 

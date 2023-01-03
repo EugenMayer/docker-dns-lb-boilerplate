@@ -2,13 +2,16 @@ version: "3"
 
 services:
   unbound:
-    image: eugenmayer/unbound:1.17
+    image: ghcr.io/eugenmayer/unbound:1.17-1
     volumes:
-    - ./unbound/01_records.conf:/etc/unbound/conf.d/01_records.conf
-    - ./unbound/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
+      - ./unbound/01_records.conf:/etc/unbound/conf.d/01_records.conf
+      - ./unbound/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
     ports:
-    - ${DNS_PORT}:53
-    - ${DNS_PORT}:53/udp
+      - ${DNS_PORT:-55}:53
+      - ${DNS_PORT:-55}:53/udp
+    labels: 
+      # do not expose this service via an auto-rule - needed since TRAEFIK_DOCKER_EXPOSEDBYDEFAULT=true
+      traefik.enable: false
   traefik:
     restart: always
     image: ghcr.io/eugenmayer/traefik:2.x
@@ -26,18 +29,23 @@ services:
       TRAEFIK_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
 
       # TRAEFIK_ACME_CASERVER: 'https://acme-v02.api.letsencrypt.org/directory'
-      TRAEFIK_ACME_CASERVER: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      TRAEFIK_ACME_CASERVER: ${TRAEFIK_ACME_CASERVER:-https://acme-staging-v02.api.letsencrypt.org/directory}
 
-      TRAEFIK_ACME_LOGGING: 'false'
+      TRAEFIK_ACME_LOGGING: "${TRAEFIK_ACME_LOGGING:-false}"
 
       # enable admin dashboard under /dashboard/
-      TRAEFIK_ADMIN_ENABLE: 'true'
-      TRAEFIK_ADMIN_SSL: 'false'
-
+      TRAEFIK_ADMIN_ENABLE: "${TRAEFIK_ADMIN_ENABLE:-true}"
+      TRAEFIK_ADMIN_GENERATE_RULE: "false"
+      TRAEFIK_ADMIN_SSL: "${TRAEFIK_ADMIN_SSL:-false}"
+      # this ensure we do not bind /dashboard/ on all traefik hosts, only the one we dedicate for the admin access
+      TRAEFIK_ADMIN_DOMAIN: "${TRAEFIK_ADMIN_DOMAIN:-www.traefik.${BASEDOMAIN}}"
+      # # create a password via `docker run -it httpd htpasswd -sbn admin yourpw`
+      # # the default here is admin/admin
+      TRAEFIK_ADMIN_AUTH_USERS:
       # docker
       TRAEFIK_DOCKER_ENABLE: 'true'
-      TRAEFIK_DOCKER_DEFAULT_RULE: 'Host(`{{ normalize .Name }}.${BASEDOMAIN}`)'
-      TRAEFIK_DOCKER_EXPOSEDBYDEFAULT: 'true'
+      TRAEFIK_DOCKER_DEFAULT_RULE: "Host(`{{ ( normalize .Name ) }}.${BASEDOMAIN}`)"
+      TRAEFIK_DOCKER_EXPOSEDBYDEFAULT: "${TRAEFIK_DOCKER_EXPOSEDBYDEFAULT:-true}"
 
       # misc
       TRAEFIK_FILE_ENABLE: 'true'
@@ -45,7 +53,7 @@ services:
       TRAEFIK_DEBUG: 'false'
       TRAEFIK_LOG_LEVEL: 'ERROR'
     volumes:
-      - ./traefik:/mnt/filestorage
+      - ${FILESTORAGE:-./traefik-file-examples}:/mnt/filestorage
       - certs:/mnt/certs
       - acme:/mnt/acme
       # mount our docker socket so our docker container can be discovered
@@ -54,14 +62,12 @@ services:
     ports:
       - 80:8080
       - 443:8443
-      - 8000:8000
     labels:
-      traefik.http.services.traefik.loadbalancer.server.port: 8443
-      traefik.http.routers.traefik.tls: 'true'
-      traefik.http.routers.traefik.tls.certresolver: 'default'
-      traefik.http.routers.traefik.rule: 'Host(`www.traefik.${BASEDOMAIN}`)'
+      # create a password via `docker run -it httpd htpasswd -bn test yourpw`
+      # the default here is admin/admin
       traefik.docker.network: 'traefik'
-
+      # do not expose this service via an auto-rule - needed since TRAEFIK_DOCKER_EXPOSEDBYDEFAULT=true
+      traefik.enable: false
 volumes:
   acme:
   certs:
