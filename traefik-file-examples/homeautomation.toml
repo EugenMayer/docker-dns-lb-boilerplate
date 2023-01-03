@@ -1,7 +1,7 @@
 [http.services]  
   [http.services.homeautomation.loadBalancer]  
     [[http.services.homeautomation.loadBalancer.servers]]  
-      url = "https://homeautomation.myself.com:80"
+      url = "http://homeautomation.myself.com:80"
 
 [http.routers]  
   [http.routers.homeautomation]  

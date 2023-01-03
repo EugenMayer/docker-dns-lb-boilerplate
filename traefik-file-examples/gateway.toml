@@ -1,7 +1,7 @@
 [http.services]  
   [http.services.gateway.loadBalancer]  
     [[http.services.gateway.loadBalancer.servers]]  
-      url = "https://gateway.myself.com:80"
+      url = "https://gateway.myself.com:443"
 
 [http.routers]  
   [http.routers.gateway]  
