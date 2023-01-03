@@ -1,7 +1,0 @@
-version: "2"
-
-services:
-  unbound:
-    image: eugenmayer/unbound:1.7-arm32v7
-  traefik:
-    image: eugenmayer/traefik:arm32v7-1.7.4
