@@ -65,9 +65,14 @@ services:
     labels:
       # create a password via `docker run -it httpd htpasswd -bn test yourpw`
       # the default here is admin/admin
-      traefik.docker.network: 'traefik'
+      traefik.docker.network: '${TRAEFIK_NETWORK:-traefik}'
       # do not expose this service via an auto-rule - needed since TRAEFIK_DOCKER_EXPOSEDBYDEFAULT=true
       traefik.enable: false
 volumes:
   acme:
   certs:
+
+networks:
+  default:
+    external:
+      name: ${TRAEFIK_NETWORK:-traefik}
