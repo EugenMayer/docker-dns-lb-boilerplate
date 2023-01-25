@@ -1,14 +1,14 @@
 version: "3"
 
 services:
-  web1: # will be accessabile via http://foo.${BASEDOMAIN} like http://customdomain.myself.com
+  web1: # will be accessabile via http://custom1.${BASEDOMAIN} like http://custom1.myself.com
     image: eugenmayer/whatsmyip
     labels:
       # will detect the port by checking the EXPOSE statemen the dockerfile (if present) automatically
       traefik.http.routers.web1.tls: 'true'
       traefik.http.routers.web1.tls.certresolver: 'default'
       traefik.http.routers.web1.rule: 'Host(`www.custom1.${BASEDOMAIN}`)'
-  fullcustom: # will be accessabile like http://unifi.myself.com
+  fullcustom: # will be accessabile like http://fullcustom.myself.com
     image: eugenmayer/whatsmyip
     labels:
       # IMPORTANT: ensure to notice that there is a KEY in all the labels "fullcustom" - if you copy and paste, you need to adjust it
