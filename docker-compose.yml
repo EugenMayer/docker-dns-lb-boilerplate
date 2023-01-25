@@ -74,5 +74,5 @@ volumes:
 
 networks:
   default:
-    external:
-      name: ${TRAEFIK_NETWORK:-traefik}
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik}
