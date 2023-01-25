@@ -35,8 +35,8 @@ services:
 
       # enable admin dashboard under /dashboard/
       TRAEFIK_ADMIN_ENABLE: "${TRAEFIK_ADMIN_ENABLE:-true}"
-      TRAEFIK_ADMIN_GENERATE_RULE: "${TRAEFIK_ADMIN_GENERATE_RULE:-false}"
-      TRAEFIK_ADMIN_SSL: "${TRAEFIK_ADMIN_SSL:-false}"
+      TRAEFIK_ADMIN_GENERATE_RULE: "${TRAEFIK_ADMIN_GENERATE_RULE:-true}"
+      TRAEFIK_ADMIN_SSL: "${TRAEFIK_ADMIN_SSL:-true}"
       # this ensure we do not bind /dashboard/ on all traefik hosts, only the one we dedicate for the admin access
       TRAEFIK_ADMIN_DOMAIN: "${TRAEFIK_ADMIN_DOMAIN:-www.traefik.${BASEDOMAIN}}"
       # # create a password via `docker run -it httpd htpasswd -sbn admin yourpw`
