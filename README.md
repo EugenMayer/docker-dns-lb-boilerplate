@@ -78,7 +78,7 @@ mkdir ./data
 ```
 
 To make this production ready,
- 1. edit `.env` and uncomment `FILESTORAGE`, `TRAEFIK_ACME_CASERVER`, `DNS_PORT`.
+ 1. edit `.env` and uncomment `FILESTORAGE`,`UNBOUND_STORAGE`, `TRAEFIK_ACME_CASERVER`, `DNS_PORT`.
  2. Also adjust `BASEODOMAIN`, `TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS`, `TRAEFIK_ACME_EMAIL` to your liking. For help for the value for `TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS` see https://github.com/EugenMayer/docker-image-traefik#acme
  3. You now should put your `file` based rules to `data/filestorage` so `data/filestorage/nas.toml` and so on
  4. ensure `COMPOSE_FILE` is set to `docker-compose.yml`

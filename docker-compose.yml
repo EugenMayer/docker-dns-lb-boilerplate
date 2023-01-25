@@ -4,8 +4,8 @@ services:
   unbound:
     image: ghcr.io/eugenmayer/unbound:1.17-1
     volumes:
-      - ${UNBOUND_STORAGE:-./unbound}/01_records.conf:/etc/unbound/conf.d/01_records.conf
-      - ${UNBOUND_STORAGE:-./unbound}/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
+      - ${UNBOUND_STORAGE:-./unbound-examples}/01_records.conf:/etc/unbound/conf.d/01_records.conf
+      - ${UNBOUND_STORAGE:-./unbound-examples}/02_forward.conf:/etc/unbound/conf.d/02_forward.conf
     ports:
       - ${DNS_PORT:-55}:53
       - ${DNS_PORT:-55}:53/udp
