@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   unbound:
@@ -9,7 +9,7 @@ services:
     ports:
       - ${DNS_PORT:-55}:53
       - ${DNS_PORT:-55}:53/udp
-    labels: 
+    labels:
       # do not expose this service via an auto-rule - needed since TRAEFIK_DOCKER_EXPOSEDBYDEFAULT=true
       traefik.enable: false
   traefik:
@@ -20,7 +20,6 @@ services:
 
       # ACME
       TRAEFIK_ACME_ENABLE: 'true'
-      TRAEFIK_ADMIN_ENABLE: 'true'
 
       TRAEFIK_ACME_CHALLENGE: 'dns'
       TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: 'cloudflare'
@@ -31,21 +30,21 @@ services:
       # TRAEFIK_ACME_CASERVER: 'https://acme-v02.api.letsencrypt.org/directory'
       TRAEFIK_ACME_CASERVER: ${TRAEFIK_ACME_CASERVER:-https://acme-staging-v02.api.letsencrypt.org/directory}
 
-      TRAEFIK_ACME_LOGGING: "${TRAEFIK_ACME_LOGGING:-false}"
+      TRAEFIK_ACME_LOGGING: '${TRAEFIK_ACME_LOGGING:-false}'
 
       # enable admin dashboard under /dashboard/
-      TRAEFIK_ADMIN_ENABLE: "${TRAEFIK_ADMIN_ENABLE:-true}"
-      TRAEFIK_ADMIN_GENERATE_RULE: "${TRAEFIK_ADMIN_GENERATE_RULE:-true}"
-      TRAEFIK_ADMIN_SSL: "${TRAEFIK_ADMIN_SSL:-true}"
+      TRAEFIK_ADMIN_ENABLE: '${TRAEFIK_ADMIN_ENABLE:-true}'
+      TRAEFIK_ADMIN_GENERATE_RULE: '${TRAEFIK_ADMIN_GENERATE_RULE:-true}'
+      TRAEFIK_ADMIN_SSL: '${TRAEFIK_ADMIN_SSL:-true}'
       # this ensure we do not bind /dashboard/ on all traefik hosts, only the one we dedicate for the admin access
-      TRAEFIK_ADMIN_DOMAIN: "${TRAEFIK_ADMIN_DOMAIN:-www.traefik.${BASEDOMAIN}}"
+      TRAEFIK_ADMIN_DOMAIN: '${TRAEFIK_ADMIN_DOMAIN:-www.traefik.${BASEDOMAIN}}'
       # # create a password via `docker run -it httpd htpasswd -sbn admin yourpw`
       # # the default here is admin/admin
       TRAEFIK_ADMIN_AUTH_USERS:
       # docker
       TRAEFIK_DOCKER_ENABLE: 'true'
-      TRAEFIK_DOCKER_DEFAULT_RULE: "Host(`{{ ( normalize .Name ) }}.${BASEDOMAIN}`)"
-      TRAEFIK_DOCKER_EXPOSEDBYDEFAULT: "${TRAEFIK_DOCKER_EXPOSEDBYDEFAULT:-true}"
+      TRAEFIK_DOCKER_DEFAULT_RULE: 'Host(`{{ ( normalize .Name ) }}.${BASEDOMAIN}`)'
+      TRAEFIK_DOCKER_EXPOSEDBYDEFAULT: '${TRAEFIK_DOCKER_EXPOSEDBYDEFAULT:-true}'
 
       # misc
       TRAEFIK_FILE_ENABLE: 'true'
